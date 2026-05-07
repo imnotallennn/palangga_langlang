@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>I LOVE YOU💕</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+
+  /* ============================================================
+     🎨 COLORS — tweak here if you want a different shade of pink
+     ============================================================ */
+  :root {
+    --pink-deep:  #c2185b;
+    --pink-mid:   #e91e8c;
+    --pink-soft:  #f8bbd9;
+    --pink-pale:  #fce4ec;
+    --text-dark:  #880e4f;
+    --text-mid:   #ad1457;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 25%, #fce4ec 50%, #f48fb1 75%, #fce4ec 100%);
+    background-size: 400% 400%;
+    animation: bgShift 10s ease infinite;
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+  }
+
+  @keyframes bgShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ============================
+     🌸 FALLING PETALS CANVAS
+     ============================ */
+  #petalsCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ============================
+     📄 PAGE LAYOUT
+     ============================ */
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  /* ============================
+     🎀 HEADER
+     ============================ */
+  .header { text-align: center; animation: fadeDown 1s ease both; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .month-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 3.5px;
+    text-transform: uppercase;
+    padding: 8px 28px;
+    border-radius: 999px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 20px rgba(233,30,140,0.35);
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(36px, 7vw, 64px);
+    font-weight: 700;
+    color: var(--pink-deep);
+    line-height: 1.1;
+    text-shadow: 0 2px 14px rgba(194,24,91,0.15);
+    margin-bottom: 6px;
+  }
+
+  .header h1 span {
+    display: block;
+    font-style: italic;
+    font-size: clamp(22px, 4.5vw, 40px);
+    color: var(--text-mid);
+  }
+
+  .hearts-row {
+    font-size: 22px;
+    letter-spacing: 8px;
+    margin-top: 12px;
+    display: block;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.14); }
+  }
+
+  /* ============================
+     📅 DAYS TOGETHER COUNTER
+     ============================ */
+  .counter-card {
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(233,30,140,0.22);
+    border-radius: 20px;
+    padding: 20px 48px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(194,24,91,0.12);
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  .counter-label {
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-mid);
+    margin-bottom: 4px;
+  }
+
+  .counter-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 9vw, 78px);
+    font-weight: 700;
+    color: var(--pink-deep);
+    line-height: 1;
+  }
+
+  .counter-sub {
+    font-size: 14px;
+    color: var(--text-mid);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* ============================
+     🎵 MUSIC BAR
+     ============================ */
+  .music-bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1.5px solid rgba(233,30,140,0.2);
+    border-radius: 999px;
+    padding: 10px 22px;
+    box-shadow: 0 4px 20px rgba(194,24,91,0.1);
+    animation: fadeUp 1s 0.35s ease both;
+  }
+
+  .music-note { font-size: 20px; animation: spin 3s linear infinite; }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
+  .music-label { font-size: 13px; color: var(--text-mid); font-style: italic; flex: 1; }
+
+  .music-toggle {
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    padding: 7px 20px;
+    font-size: 13px;
+    cursor: pointer;
+    font-family: 'Lora', serif;
+    transition: opacity 0.2s;
+  }
+  .music-toggle:hover { opacity: 0.85; }
+
+  /* ============================
+     📷 PHOTOS SECTION
+     ============================ */
+  .photos-section { width: 100%; animation: fadeUp 1s 0.45s ease both; }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    text-align: center;
+    font-size: 19px;
+    color: var(--text-mid);
+    margin-bottom: 18px;
+  }
+
+  .photos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .photo-main { grid-column: 1 / -1; }
+
+  .photo-slot {
+    border-radius: 22px;
+    overflow: hidden;
+    border: 3px solid #fff;
+    box-shadow: 0 8px 32px rgba(194,24,91,0.18), 0 0 0 1px rgba(233,30,140,0.12);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: linear-gradient(135deg, #fce4ec, #f8bbd9);
+  }
+
+  .photo-slot:hover {
+    transform: scale(1.016);
+    box-shadow: 0 14px 44px rgba(194,24,91,0.26);
+  }
+
+  .photo-main img {
+    width: 100%;
+    height: 700px;        /* ← change height of big photo here */
+    object-fit: cover;
+    display: block;
+  }
+
+  .photo-small img {
+    width: 100%;
+    height: 220px;        /* ← change height of small photos here */
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ============================
+     💌 LETTER
+     ============================ */
+  .ribbon {
+    width: 100%;
+    text-align: center;
+    position: relative;
+    animation: fadeUp 1s 0.55s ease both;
+  }
+
+  .ribbon::before, .ribbon::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 36%;
+    height: 1.5px;
+  }
+
+  .ribbon::before { left: 0;  background: linear-gradient(90deg,  transparent, rgba(233,30,140,0.45)); }
+  .ribbon::after  { right: 0; background: linear-gradient(270deg, transparent, rgba(233,30,140,0.45)); }
+  .ribbon span { font-size: 22px; letter-spacing: 5px; }
+
+  .letter-section { width: 100%; animation: fadeUp 1s 0.65s ease both; }
+
+  .letter-card {
+    background: rgba(255,255,255,0.70);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border-radius: 30px;
+    border: 1.5px solid rgba(233,30,140,0.2);
+    padding: 38px 38px 32px;
+    box-shadow: 0 12px 50px rgba(194,24,91,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .letter-card::before {
+    content: '♥';
+    position: absolute;
+    top: -28px; right: -18px;
+    font-size: 140px;
+    color: rgba(233,30,140,0.055);
+    pointer-events: none;
+  }
+
+  .letter-card::after {
+    content: '♥';
+    position: absolute;
+    bottom: -38px; left: -18px;
+    font-size: 140px;
+    color: rgba(233,30,140,0.055);
+    pointer-events: none;
+  }
+
+  .letter-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    color: var(--text-mid);
+    letter-spacing: 1.5px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .hint-text {
+    text-align: center;
+    font-size: 13px;
+    color: #e91e8c;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+  }
+
+  .sentence {
+    font-family: 'Lora', serif;
+    font-size: clamp(15px, 2.2vw, 17px);
+    line-height: 1.9;
+    color: var(--text-dark);
+    padding: 10px 16px;
+    border-radius: 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+
+  .sentence.hidden {
+    filter: blur(7px);
+    opacity: 0.2;
+    pointer-events: none;
+  }
+
+  .sentence.active {
+    background: linear-gradient(135deg, rgba(233,30,140,0.09), rgba(255,255,255,0.55));
+    border: 1.5px solid rgba(233,30,140,0.25);
+    box-shadow: 0 4px 18px rgba(233,30,140,0.1);
+    animation: gentlePop 0.4s ease;
+  }
+
+  .sentence.active::after {
+    content: '♥';
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e91e8c;
+    font-size: 14px;
+    animation: heartBeat 1.2s ease infinite;
+  }
+
+  .sentence.done { opacity: 0.55; pointer-events: none; }
+
+  @keyframes gentlePop {
+    0%   { transform: scale(0.98); }
+    60%  { transform: scale(1.01); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes heartBeat {
+    0%, 100% { transform: translateY(-50%) scale(1); }
+    50%       { transform: translateY(-50%) scale(1.35); }
+  }
+
+  .sentence.reveal-anim {
+    animation: revealIn 0.5s ease;
+  }
+
+  @keyframes revealIn {
+    from { opacity: 0; transform: translateY(8px); filter: blur(5px); }
+    to   { opacity: 0.55; transform: translateY(0); filter: blur(0); }
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(233,30,140,0.1);
+    border-radius: 999px;
+    margin-top: 22px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e91e8c, #f06292);
+    border-radius: 999px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+
+  .finale { display: none; text-align: center; padding: 26px 16px 10px; }
+  .finale.show { display: block; animation: fadeUp 0.8s ease both; }
+
+  .finale-hearts { font-size: 30px; letter-spacing: 10px; margin-bottom: 12px; animation: pulse 1.5s ease infinite; }
+
+  .finale-msg {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-mid);
+  }
+
+  /* ============================
+     🎊 CONFETTI
+     ============================ */
+  .confetti-piece {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall 1.6s ease forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(220px) rotate(720deg) scale(0.2); }
+  }
+
+  /* ============================
+     🦶 FOOTER
+     ============================ */
+  .footer {
+    text-align: center;
+    font-size: 12px;
+    color: rgba(194,24,91,0.55);
+    letter-spacing: 1.5px;
+    animation: fadeUp 1s 1s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(26px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .letter-card { padding: 26px 18px; }
+    .photos-grid { grid-template-columns: 1fr; }
+    .photo-main { grid-column: 1; }
+    .counter-card { padding: 18px 28px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- =====================================================
+     🌸 FALLING PETALS — automatic, no editing needed
+     ===================================================== -->
+<canvas id="petalsCanvas"></canvas>
+
+<!-- =====================================================
+     🎵 BACKGROUND MUSIC
+     ─────────────────────────────────────────────────────
+     STEP 1: Put your .mp3 file in the SAME folder as this HTML file
+     STEP 2: Replace "your-song.mp3" below with your actual filename
+
+     Example:
+       If your file is called  "perfect.mp3"
+       Change to:  <source src="perfect.mp3" type="audio/mpeg">
+
+       If your file is in a subfolder called "music":
+       Change to:  <source src="music/perfect.mp3" type="audio/mpeg">
+     ===================================================== -->
+<audio id="bgMusic" loop>
+  <source src="LoveOfMyLife.mp3" type="audio/mpeg">
+</audio>
+
+<div class="page">
+
+  <!-- =====================================================
+       🎀 HEADER — edit the text here if you want
+       ===================================================== -->
+  <header class="header">
+    <div class="month-badge">✦ Special Day ✦</div>
+    <h1>
+      Happy Monthsary
+      <span>Palangga nako 💕</span>
+    </h1>
+    <span class="hearts-row">♥ ♡ ♥ ♡ ♥</span>
+  </header>
+
+  <!-- =====================================================
+       📅 DAYS TOGETHER COUNTER
+       The number is calculated automatically from START_DATE
+       in the <script> section below. Find the line that says:
+         const START_DATE = "2024-01-01";
+       and change it to your real start date.
+       ===================================================== -->
+  <div class="counter-card">
+    <p class="counter-label">Days Together</p>
+    <p class="counter-number" id="daysCount">—</p>
+    <p class="counter-sub">days of loving you 💕</p>
+  </div>
+
+  <!-- =====================================================
+       🎵 MUSIC PLAYER BAR
+       Change "Our Song" to the name of your chosen song
+       ===================================================== -->
+  <div class="music-bar">
+    <span class="music-note">🎵</span>
+    <span class="music-label">Press this first</span>  <!-- ← change song name here -->
+    <button class="music-toggle" id="musicBtn" onclick="toggleMusic()">▶ Play</button>
+  </div>
+
+  <!-- =====================================================
+       📷 PHOTOS SECTION
+       ─────────────────────────────────────────────────────
+       HOW TO ADD YOUR PHOTOS:
+         1. Put your image files in the SAME folder as this HTML file
+         2. Replace each src="..." with your actual image filename
+
+       SUPPORTED FORMATS: .jpg  .jpeg  .png  .webp
+
+       EXAMPLE FOLDER STRUCTURE:
+         📁 monthsary/
+           📄 index.html        ← this file
+           🖼️ photo1.jpg        ← your big photo
+           🖼️ photo2.jpg        ← small photo left
+           🖼️ photo3.jpg        ← small photo right
+           🎵 your-song.mp3     ← your music file
+       ===================================================== -->
+  <section class="photos-section">
+    <p class="section-title">✨ Our Beautiful Memories ✨</p>
+    <div class="photos-grid">
+
+      <!-- ── BIG MAIN PHOTO (top, full width) ──────────── -->
+      <!-- Change src="photo1.jpg" to your actual filename  -->
+      <div class="photo-slot photo-main">
+        <img src="img/photo1.jpg" alt="Our main photo">
+      </div>
+
+      <!-- ── SMALL PHOTO (bottom left) ─────────────────── -->
+      <!-- Change src="photo2.jpg" to your actual filename  -->
+      <div class="photo-slot photo-small">
+        <img src="photo2.jpg" alt="Our photo 2">
+      </div>
+
+      <!-- ── SMALL PHOTO (bottom right) ────────────────── -->
+      <!-- Change src="photo3.jpg" to your actual filename  -->
+      <div class="photo-slot photo-small">
+        <img src="photo3.jpg" alt="Our photo 3">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- decorative divider -->
+  <div class="ribbon"><span>💌 &nbsp; A Letter For You &nbsp; 💌</span></div>
+
+  <!-- =====================================================
+       💌 LETTER SECTION
+       Edit the sentences inside the script below.
+       Look for the section called "LETTER SENTENCES".
+       ===================================================== -->
+  <section class="letter-section">
+    <div class="letter-card">
+      <p class="letter-header">— From my heart to yours —</p>
+      <p class="hint-text">
+        <span>👆</span>
+        <span>Touch each sentence to reveal the next one</span>
+        <span>👆</span>
+      </p>
+      <div id="sentencesContainer"></div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="finale" id="finale">
+        <div class="finale-hearts">♥ ♥ ♥</div>
+        <p class="finale-msg">Palangga kaayo taka. 💕</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">made with all my love &nbsp;♥&nbsp; for you, always</footer>
+
+</div>
+
+<script>
+
+/* ============================================================
+   📅 START DATE
+   ─────────────────────────────────────────────────────────────
+   Change this to the date you both started dating.
+   Format must be: "YYYY-MM-DD"
+
+   Examples:
+     const START_DATE = "2024-09-14";
+     const START_DATE = "2025-02-01";
+   ============================================================ */
+const START_DATE = "2024-12-07"; // ← CHANGE THIS
+
+
+/* ============================================================
+   💌 LETTER SENTENCES
+   ─────────────────────────────────────────────────────────────
+   Each line is one sentence. Your gf taps to reveal them
+   one by one in order.
+
+   Rules for editing:
+     • Keep each sentence inside double quotes " "
+     • Separate sentences with a comma ,
+     • The last sentence has NO comma after it
+     • You can add as many sentences as you want
+   ============================================================ */
+const letterSentences = [
+  "Happy Monthsary, Palangga.",
+  "Even though life gets very busy po and there are days nga daghan kaayo responsibilities, I want you to know that my love for you never changes.",
+  "Every day po, I still think about you, appreciate you, and feel grateful that I have someone as special as you in my life.",
+  "Daghan na kaayo ta kaagi lang, niabut nas point nga nisurender ba or kasurrenderon na ka sa akoa",
+  "and still you choose me",
+  "Thankful kayko niana, palangga.",
+  "Always hunahunaa kani tanan akong gibuhat para rapud ni sa imoha",
+  "Naa rako diari ga support nimo",
+  "Kabalo ko nga dili permi sayon ang relasyon labi na kung daghan tag ginabuhat",
+  "pero ikaw gihapon ang akong pahulay ug kalipay.",
+  "Sa tanan nga adlaw nga ga spent time ta together",
+  "mas narealize nako kung unsa ka ka-importante sa akong kinabuhi",
+  "Imong Love ug suporta maoy makapadasig nako kada adlaw",
+  "Thank you for being patient with me and for always understanding me even when I can't give all my time sometimes, palangga.",
+  "I just want to remind you today that biskan unsa ka busy po, you will always have a place in my heart.",
+  "You make my days brighter, and loving you is one of the best things that ever happened to me.",
+  "Happy Monthsary, my baby uanna.",
+  "I love you more and more every single day.",
+  "Bawi rako puhon sa akong pagkulang nimo. 💕",
+  "Amping pirmi ug hinumdumi nga naa ra ko pirmi para nimo."
+];
+
+
+/* ============================================================
+   ⬇️  BELOW THIS LINE — logic, no need to edit
+   ============================================================ */
+
+// Days counter
+(function() {
+  const start = new Date(START_DATE);
+  const today = new Date();
+  const diff  = Math.floor((today - start) / (1000 * 60 * 60 * 24));
+  document.getElementById('daysCount').textContent = diff >= 0 ? diff : '—';
+})();
+
+// Music
+const audio = document.getElementById('bgMusic');
+const btn   = document.getElementById('musicBtn');
+let playing = false;
+
+function toggleMusic() {
+  if (playing) {
+    audio.pause();
+    btn.textContent = '▶ Play';
+  } else {
+    audio.play().catch(() => {});
+    btn.textContent = '⏸ Pause';
+  }
+  playing = !playing;
+}
+
+// Try autoplay on first tap anywhere
+document.body.addEventListener('click', function autoStart() {
+  if (!playing) {
+    audio.play().then(() => { playing = true; btn.textContent = '⏸ Pause'; }).catch(() => {});
+  }
+  document.body.removeEventListener('click', autoStart);
+}, { once: true });
+
+// Letter tap-to-reveal
+let current = 0;
+const container    = document.getElementById('sentencesContainer');
+const progressFill = document.getElementById('progressFill');
+const finale       = document.getElementById('finale');
+
+letterSentences.forEach((text, i) => {
+  const div = document.createElement('div');
+  div.className = 'sentence' + (i === 0 ? ' active' : ' hidden');
+  div.textContent = text;
+  if (i === 0) div.addEventListener('click', () => advance(0));
+  container.appendChild(div);
+});
+
+function advance(idx) {
+  if (idx !== current) return;
+  const all = container.querySelectorAll('.sentence');
+  all[idx].classList.replace('active', 'done');
+  spawnConfetti(all[idx]);
+  current++;
+  progressFill.style.width = (current / letterSentences.length * 100) + '%';
+  if (current < letterSentences.length) {
+    const next = all[current];
+    next.classList.remove('hidden');
+    next.classList.add('active', 'reveal-anim');
+    setTimeout(() => next.classList.remove('reveal-anim'), 600);
+    const cap = current;
+    next.addEventListener('click', () => advance(cap));
+  } else {
+    finale.classList.add('show');
+    spawnManyHearts();
+  }
+}
+
+function spawnConfetti(el) {
+  const r = el.getBoundingClientRect();
+  const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  const colors = ['#e91e8c','#f06292','#f48fb1','#f8bbd9','#c2185b','#ff80ab'];
+  for (let i = 0; i < 14; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.cssText = `left:${cx+(Math.random()-.5)*130}px;top:${cy+(Math.random()-.5)*50}px;background:${colors[Math.floor(Math.random()*colors.length)]};width:${6+Math.random()*9}px;height:${6+Math.random()*9}px;animation-duration:${1+Math.random()*.8}s;animation-delay:${Math.random()*.25}s;`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 2200);
+  }
+}
+
+function spawnManyHearts() {
+  for (let i = 0; i < 24; i++) {
+    setTimeout(() => {
+      const h = document.createElement('div');
+      h.className = 'confetti-piece';
+      h.textContent = '♥';
+      h.style.cssText = `left:${Math.random()*window.innerWidth}px;top:${Math.random()*window.innerHeight*.75}px;background:transparent;font-size:${16+Math.random()*22}px;width:auto;height:auto;animation-duration:${1.4+Math.random()*.8}s;color:#e91e8c;`;
+      document.body.appendChild(h);
+      setTimeout(() => h.remove(), 2500);
+    }, i * 75);
+  }
+}
+
+// Falling petals
+(function() {
+  const canvas = document.getElementById('petalsCanvas');
+  const ctx    = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const colors = [
+    'rgba(233,30,140,0.50)', 'rgba(244,143,177,0.55)',
+    'rgba(255,128,171,0.48)', 'rgba(248,187,217,0.60)', 'rgba(194,24,91,0.42)',
+  ];
+
+  function makePetal(fromTop) {
+    return {
+      x: Math.random() * window.innerWidth,
+      y: fromTop ? -20 : Math.random() * window.innerHeight,
+      size: 5 + Math.random() * 9,
+      speedY: 0.6 + Math.random() * 1.1,
+      speedX: (Math.random() - 0.5) * 0.7,
+      rot: Math.random() * Math.PI * 2,
+      rotS: (Math.random() - 0.5) * 0.04,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      wobble: Math.random() * Math.PI * 2,
+      wobbleS: 0.015 + Math.random() * 0.02,
+    };
+  }
+
+  const petals = Array.from({ length: 38 }, () => makePetal(false));
+
+  function draw(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.size * 0.55, p.size, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    petals.forEach(p => {
+      p.wobble += p.wobbleS;
+      p.x += p.speedX + Math.sin(p.wobble) * 0.5;
+      p.y += p.speedY;
+      p.rot += p.rotS;
+      if (p.y > canvas.height + 20) Object.assign(p, makePetal(true), { x: Math.random() * canvas.width });
+      draw(p);
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+})();
+
+</script>
+</body>
+</html>

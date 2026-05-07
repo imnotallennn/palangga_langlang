@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>hwhehe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+
+  /* ============================================================
+     🎨 COLORS
+     ============================================================ */
+  :root {
+    --pink-deep:  #c2185b;
+    --pink-mid:   #e91e8c;
+    --pink-pale:  #fce4ec;
+    --pink-soft:  #f8bbd9;
+    --text-dark:  #880e4f;
+    --text-mid:   #ad1457;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    width: 100%; min-height: 100vh;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 30%, #fce4ec 60%, #f48fb1 100%);
+    background-size: 400% 400%;
+    animation: bgShift 10s ease infinite;
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+  }
+
+  @keyframes bgShift {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  /* ── Falling petals ── */
+  #petalsCanvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── Screens ── */
+  .screen {
+    position: relative; z-index: 1;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 24px;
+    text-align: center;
+  }
+
+  .screen.active { display: flex; }
+
+  /* ── Card shell ── */
+  .card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1.5px solid rgba(233,30,140,0.22);
+    border-radius: 30px;
+    padding: 44px 40px 38px;
+    box-shadow: 0 14px 52px rgba(194,24,91,0.14), inset 0 1px 0 rgba(255,255,255,0.9);
+    max-width: 480px;
+    width: 100%;
+    animation: popIn 0.6s cubic-bezier(.34,1.56,.64,1) both;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  /* ============================================================
+     SCREEN 1 — "Do you love me?"
+     ============================================================ */
+
+  /* ── Cute image ──
+     HOW TO USE:
+       1. Put your image in the same folder as this file
+       2. Change src="cute.jpg" to your actual filename
+          e.g. src="cat.png" or src="bear.jpg"
+  ── */
+  .cute-img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 28px rgba(194,24,91,0.2);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+  .cute-img1 {
+    width: 400px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 20px;
+    border: 4px solid #fff;
+    box-shadow: 0 8px 28px rgba(194,24,91,0.2);
+    margin-bottom: 28px;
+    display: block;
+  }
+
+
+  /* placeholder shown when image not yet set */
+  .img-placeholder {
+    width: 220px; height: 220px;
+    border-radius: 20px;
+    border: 3px dashed rgba(233,30,140,0.4);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; margin: 0 auto 28px;
+    color: var(--text-mid); font-size: 14px;
+    background: rgba(252,228,236,0.6);
+  }
+
+  .img-placeholder .icon { font-size: 40px; }
+  .img-placeholder .note { font-size: 12px; opacity: 0.7; }
+
+  .question {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 5vw, 34px);
+    font-weight: 700;
+    color: var(--pink-deep);
+    margin-bottom: 32px;
+    line-height: 1.25;
+  }
+
+  /* ── Buttons wrapper ── */
+  .btn-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  /* YES button */
+  .btn-yes {
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 14px 36px;
+    cursor: pointer;
+    box-shadow: 0 6px 22px rgba(233,30,140,0.38);
+    transition: transform 0.2s, box-shadow 0.2s, font-size 0.4s, padding 0.4s;
+    white-space: nowrap;
+  }
+
+  .btn-yes:hover { transform: scale(1.06); box-shadow: 0 10px 30px rgba(233,30,140,0.45); }
+  .btn-yes:active { transform: scale(0.96); }
+
+  /* NO button */
+  .btn-no {
+    background: rgba(255,255,255,0.7);
+    color: var(--text-mid);
+    border: 2px solid rgba(233,30,140,0.35);
+    border-radius: 999px;
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    padding: 12px 30px;
+    cursor: pointer;
+    transition: transform 0.2s, font-size 0.4s, padding 0.4s, opacity 0.4s;
+    white-space: nowrap;
+  }
+
+  .btn-no:hover { transform: scale(0.96); opacity: 0.8; }
+
+  /* ── Teasing sub-text ── */
+  .tease {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-top: 18px;
+    min-height: 22px;
+    transition: opacity 0.4s;
+  }
+
+  /* ============================================================
+     SCREEN 2 — Confetti / hearts celebration
+     ============================================================ */
+  .yay-emoji { font-size: 60px; margin-bottom: 16px; animation: bounce 0.8s ease infinite alternate; }
+  @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-14px); } }
+
+  .yay-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 5vw, 38px);
+    font-weight: 700;
+    color: var(--pink-deep);
+    margin-bottom: 10px;
+  }
+
+  .yay-sub {
+    font-size: 16px;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-bottom: 28px;
+  }
+
+  .btn-continue {
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    padding: 14px 40px;
+    cursor: pointer;
+    box-shadow: 0 6px 22px rgba(233,30,140,0.38);
+    transition: transform 0.2s;
+  }
+
+  .btn-continue:hover { transform: scale(1.05); }
+
+  /* ============================================================
+     SCREEN 3 — Secret code
+     ============================================================ */
+  .lock-icon { font-size: 52px; margin-bottom: 14px; animation: wiggle 2s ease-in-out infinite; }
+
+  @keyframes wiggle {
+    0%,100% { transform: rotate(0deg); }
+    20%      { transform: rotate(-8deg); }
+    40%      { transform: rotate(8deg); }
+    60%      { transform: rotate(-4deg); }
+    80%      { transform: rotate(4deg); }
+  }
+
+  .code-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(22px, 4vw, 30px);
+    font-weight: 700;
+    color: var(--pink-deep);
+    margin-bottom: 8px;
+  }
+
+  .code-hint {
+    font-size: 14px;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-bottom: 26px;
+  }
+
+  .code-input {
+    width: 100%;
+    max-width: 280px;
+    padding: 14px 20px;
+    font-family: 'Lora', serif;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 4px;
+    border: 2px solid rgba(233,30,140,0.3);
+    border-radius: 14px;
+    background: rgba(255,255,255,0.8);
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .code-input:focus {
+    border-color: #e91e8c;
+    box-shadow: 0 0 0 3px rgba(233,30,140,0.15);
+  }
+
+  .code-input.shake {
+    animation: shake 0.45s ease;
+  }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%      { transform: translateX(-8px); }
+    40%      { transform: translateX(8px); }
+    60%      { transform: translateX(-5px); }
+    80%      { transform: translateX(5px); }
+  }
+
+  .code-input.wrong { border-color: #e53935; box-shadow: 0 0 0 3px rgba(229,57,53,0.15); }
+  .code-input.correct { border-color: #43a047; box-shadow: 0 0 0 3px rgba(67,160,71,0.15); }
+
+  .btn-unlock {
+    background: linear-gradient(135deg, #e91e8c, #c2185b);
+    color: #fff;
+    border: none;
+    border-radius: 999px;
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    padding: 13px 38px;
+    cursor: pointer;
+    box-shadow: 0 6px 22px rgba(233,30,140,0.35);
+    transition: transform 0.2s;
+  }
+
+  .btn-unlock:hover { transform: scale(1.05); }
+
+  .code-error {
+    font-size: 13px;
+    color: #e53935;
+    margin-top: 12px;
+    min-height: 20px;
+    font-style: italic;
+  }
+
+  .code-tries {
+    font-size: 12px;
+    color: rgba(173,20,87,0.55);
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  /* ── Confetti pieces ── */
+  .confetti-piece {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    animation: confettiFall 1.8s ease forwards;
+  }
+
+  @keyframes confettiFall {
+    0%   { opacity: 1; transform: translateY(0) rotate(0deg) scale(1); }
+    100% { opacity: 0; transform: translateY(240px) rotate(720deg) scale(0.15); }
+  }
+
+  @media (max-width: 500px) {
+    .card { padding: 32px 20px 28px; }
+    .cute-img, .img-placeholder { width: 180px; height: 180px; }
+  }
+
+</style>
+</head>
+<body>
+
+<canvas id="petalsCanvas"></canvas>
+
+<!-- ============================================================
+     SCREEN 1 — "Do you love me?"
+     ============================================================ -->
+<div class="screen active" id="screen1">
+  <div class="card">
+
+    <!-- ══════════════════════════════════════════════════════
+         📷 YOUR CUTE IMAGE
+         ────────────────────────────────────────────────────
+         TO ADD YOUR IMAGE:
+           1. Put your image file in the same folder as this HTML
+           2. Delete the <div class="img-placeholder"> block below
+           3. Uncomment the <img> line by removing the  and
+           4. Change  cute.jpg  to your actual filename
+         ══════════════════════════════════════════════════════ -->
+
+    <!-- DELETE the placeholder div below once you add your image -->
+      <span class="icon">🐱</span>
+      <span>hillo, sad kooo</span>
+    </div>
+
+    <!-- UNCOMMENT this line and change cute.jpg to your filename -->
+    <img class="cute-img" src="cute4.jpg" alt="Cute image"> 
+
+    <p class="question" id="mainQuestion">Do you love me, lang? 🥺</p>
+
+    <div class="btn-row" id="btnRow">
+      <button class="btn-yes" id="btnYes" onclick="clickYes()">Yes 💕</button>
+      <button class="btn-no"  id="btnNo"  onclick="clickNo()">No</button>
+    </div>
+
+    <p class="tease" id="teaseText"></p>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 2 — Confetti celebration after YES
+     ============================================================ -->
+<div class="screen" id="screen2">
+  <div class="card">
+    <div class="yay-emoji">🥰</div>
+    <img class="cute-img1" src="cute2.jpg" alt="Cute image"> 
+    <p class="yay-title">k4b4LHo kHoo OYYY! 💕</p>
+    <p class="yay-sub">~LOVE pud kaayo taka, palangga~</p>
+    <button class="btn-continue" onclick="goToCode()">Open your surprise 🎁</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCREEN 3 — Secret code input
+     ============================================================ -->
+<div class="screen" id="screen3">
+  <div class="card">
+    <div class="lock-icon">🔐</div>
+    <p class="code-title">Enter the secret code po</p>
+
+    <!-- ══════════════════════════════════════════════════════
+         💬 HINT TEXT — change this to a clue for your gf
+         ══════════════════════════════════════════════════════ -->
+    <p class="code-hint">"gwapa maldita kayka hab, chatti ko para sa code" 🌸</p>
+
+    <input
+      class="code-input"
+      id="codeInput"
+      type="text"
+      placeholder="type here..."
+      autocomplete="off"
+      autocorrect="off"
+      autocapitalize="off"
+      spellcheck="false"
+      onkeydown="if(event.key==='Enter') checkCode()"
+    >
+
+    <button class="btn-unlock" onclick="checkCode()">Unlock 🔓</button>
+
+    <p class="code-error" id="codeError"></p>
+    <p class="code-tries" id="codeTries"></p>
+  </div>
+</div>
+
+
+<script>
+
+/* ============================================================
+   ⚙️  CONFIG — only edit things in this block
+   ============================================================ */
+
+// 🔑 SECRET CODE — change this to whatever you want
+// Currently set to: palangga
+const SECRET_CODE = "dawat taka";
+
+// 📄 PAGE TO OPEN after correct code
+// This must match your monthsary HTML filename exactly
+const MONTHSARY_PAGE = "monthsary.html";
+
+/* ============================================================
+   ⬇️  BELOW THIS LINE — no need to edit
+   ============================================================ */
+
+let noCount   = 0;   // how many times she clicked No
+let tries     = 0;   // wrong code attempts
+
+/* ── No button logic ── */
+function clickNo() {
+  noCount++;
+  const btnYes   = document.getElementById('btnYes');
+  const btnNo    = document.getElementById('btnNo');
+  const tease    = document.getElementById('teaseText');
+  const question = document.getElementById('mainQuestion');
+
+  if (noCount === 1) {
+    // YES grows, NO label changes
+    btnYes.style.fontSize  = '26px';
+    btnYes.style.padding   = '18px 50px';
+    btnNo.textContent      = 'no? 🥺';
+    btnNo.style.fontSize   = '14px';
+    btnNo.style.padding    = '8px 18px';
+    tease.textContent      = 'Sure jud ka, lang? 🥺';
+    question.textContent   = 'Dili na jud ko nimo lab? 😢';
+  }
+
+  if (noCount === 2) {
+    // YES becomes huge, NO becomes tiny
+    btnYes.style.fontSize  = '32px';
+    btnYes.style.padding   = '22px 64px';
+    btnNo.textContent      = 'still no? 😭';
+    btnNo.style.fontSize   = '11px';
+    btnNo.style.padding    = '6px 12px';
+    btnNo.style.opacity    = '0.5';
+    tease.textContent      = 'Palangga, tuploka na ang YES po 🥺💕';
+    question.textContent   = 'Okay po… pero love japun taka 🥺';
+  }
+
+  if (noCount >= 3) {
+    // NO disappears, YES takes over
+    btnNo.style.display    = 'none';
+    btnYes.style.fontSize  = '38px';
+    btnYes.style.padding   = '26px 80px';
+    btnYes.style.width     = '100%';
+    tease.textContent      = 'dili na jud ka kalikay po hwehe 💕😂';
+    question.textContent   = 'Just press it na. I know you want it to 💖';
+  }
+}
+
+/* ── Yes button logic ── */
+function clickYes() {
+  // big confetti burst
+  burstConfetti();
+  setTimeout(() => {
+    document.getElementById('screen1').classList.remove('active');
+    document.getElementById('screen2').classList.add('active');
+    burstConfetti(); // second wave
+  }, 400);
+}
+
+/* ── Continue to code screen ── */
+function goToCode() {
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen3').classList.add('active');
+  setTimeout(() => document.getElementById('codeInput').focus(), 300);
+}
+
+/* ── Code check ── */
+function checkCode() {
+  const input = document.getElementById('codeInput');
+  const error = document.getElementById('codeError');
+  const hint  = document.getElementById('codeTries');
+  const val   = input.value.trim().toLowerCase();
+
+  if (val === SECRET_CODE.toLowerCase()) {
+    input.classList.add('correct');
+    error.textContent = '';
+    hint.textContent  = '';
+    burstConfetti();
+    setTimeout(() => {
+      window.location.href = MONTHSARY_PAGE;
+    }, 900);
+  } else {
+    tries++;
+    input.classList.remove('correct');
+    input.classList.add('wrong', 'shake');
+    setTimeout(() => input.classList.remove('shake', 'wrong'), 500);
+
+    const wrongMessages = [
+      'Wrong code, palangga 🥺 Try again!',
+      'Hmm, not that one! Think harder 💭',
+      'Nope! Hint: (mao ni akong ginaingon sa imoha) 🌸',
+      'Almost! You got this, palangga 💕',
+      'Try again~ I believe in you! 🥺',
+    ];
+
+    error.textContent = wrongMessages[Math.min(tries - 1, wrongMessages.length - 1)];
+    hint.textContent  = tries >= 2 ? `${tries} tries so far 🙈` : '';
+    input.select();
+  }
+}
+
+/* ── Confetti helper ── */
+function burstConfetti() {
+  const colors = ['#e91e8c','#f06292','#f48fb1','#f8bbd9','#c2185b','#ff80ab','#fff'];
+  for (let i = 0; i < 36; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      const isHeart = Math.random() > 0.5;
+      if (isHeart) {
+        c.textContent = '♥';
+        c.style.cssText = `
+          left:${10+Math.random()*80}vw;
+          top:${10+Math.random()*50}vh;
+          background:transparent;
+          font-size:${14+Math.random()*22}px;
+          width:auto;height:auto;
+          color:${colors[Math.floor(Math.random()*colors.length)]};
+          animation-duration:${1.2+Math.random()*1}s;
+        `;
+      } else {
+        c.style.cssText = `
+          left:${10+Math.random()*80}vw;
+          top:${10+Math.random()*50}vh;
+          background:${colors[Math.floor(Math.random()*colors.length)]};
+          width:${7+Math.random()*10}px;
+          height:${7+Math.random()*10}px;
+          animation-duration:${1.2+Math.random()*1}s;
+          animation-delay:${Math.random()*0.3}s;
+        `;
+      }
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 2500);
+    }, i * 40);
+  }
+}
+
+/* ── Falling petals ── */
+(function() {
+  const canvas = document.getElementById('petalsCanvas');
+  const ctx    = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  const colors = [
+    'rgba(233,30,140,0.48)','rgba(244,143,177,0.53)',
+    'rgba(255,128,171,0.46)','rgba(248,187,217,0.58)','rgba(194,24,91,0.40)',
+  ];
+
+  function makePetal(fromTop) {
+    return {
+      x: Math.random() * window.innerWidth,
+      y: fromTop ? -20 : Math.random() * window.innerHeight,
+      size: 5 + Math.random() * 9,
+      speedY: 0.6 + Math.random() * 1.1,
+      speedX: (Math.random() - 0.5) * 0.7,
+      rot: Math.random() * Math.PI * 2,
+      rotS: (Math.random() - 0.5) * 0.04,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      wobble: Math.random() * Math.PI * 2,
+      wobbleS: 0.015 + Math.random() * 0.02,
+    };
+  }
+
+  const petals = Array.from({ length: 36 }, () => makePetal(false));
+
+  function draw(p) {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.size * 0.55, p.size, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  (function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    petals.forEach(p => {
+      p.wobble += p.wobbleS;
+      p.x += p.speedX + Math.sin(p.wobble) * 0.5;
+      p.y += p.speedY;
+      p.rot += p.rotS;
+      if (p.y > canvas.height + 20) Object.assign(p, makePetal(true), { x: Math.random() * canvas.width });
+      draw(p);
+    });
+    requestAnimationFrame(animate);
+  })();
+})();
+
+</script>
+</body>
+</html>
